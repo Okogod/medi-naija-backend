@@ -1,0 +1,248 @@
+# 👤 User Flow 
+
+            1. Authentication
+
+            - **Registration**
+            - Stage 1: Input firstname, lastname, email, password  
+            - Stage 2: Verify email → Register user if successful 
+
+            - **Login**
+            - Stage 1: Input email, password  
+            - Stage 2: Verify credentials → Login user 
+             
+            - **Logout**
+            - End session  
+
+            ---
+
+            2. Change Password
+            - Stage 1: Input email → Send OTP  
+            - Stage 2: Input new password after OTP confirmation → Reset old password  
+
+            ---
+
+            3. Profile Management
+            - Stage 1: Add/edit profile picture, street, state, gender, date of birth 
+            - Stage 2: Save details  
+
+            ---
+
+            4. Payment Method
+            - Stage 1: Input card details (type, holder name, number, expiry, CVV)  
+            - Stage 2: Verify card details  
+            - Stage 3: Check if card already exists  
+            - Stage 4: Save card details  
+
+            ---
+
+            5. Book Appointment
+            - Stage 1: User messages doctor → Sends appointment request  
+            - Stage 2: Doctor sets schedule (home or office)  
+            - Stage 3: User confirms appointment  
+            - If insufficient balance → Notify user, halt confirmation  
+            - Else → Deduct payment, confirm appointment  
+
+            - **Follow-up (Home appointments)**  
+            - Notifications sent as appointment time approaches  
+            - Doctor scans QR code to start appointment  
+            - Late arrival penalties applied to doctor payout  
+
+            - **Settlement Stage (New)**  
+            - If appointment completed → Platform transfers payment to doctor’s account  
+            - User notified of successful completion  
+
+            ---
+
+            6. Add to Cart
+            - If item already in cart → Notify user  
+            - Else → Add item with quantity  
+
+            ---
+
+            7. Place Order
+            - Stage 1: Get user’s address (if missing → prompt user)  
+            - Stage 2: Process delivery details  
+            - Stage 3: User makes payment → Places order  
+            - Stage 4: Pharmacy notified  
+            - Stage 5: User receives order details & status  
+
+            - **After Placing Order**  
+            - Notifications sent as delivery time approaches  
+            - Delivery person generates timed QR code → User scans to confirm delivery  
+
+            - **Refund Stage (New)**  
+            - If pharmacy cancels order → Platform refunds payment to user’s method  
+            - User notified of refund status  
+
+            ---
+
+            8. Delete Account
+            - Stage 1: Check for open appointments/orders  
+            - If yes → Notify user, halt deletion  
+            - Stage 2: Delete account  
+
+            ---
+
+# 🩺 Doctor Flow 
+
+        1. Authentication
+        - **Registration**
+        - Stage 1: Input firstname, lastname, email, password, profession, state, street, services, languages, doctor certificate  
+        - Stage 2: Verify email → Verify doctor certificate → Register doctor if successful  
+        - **Login**
+        - Stage 1: Input email, password  
+        - Stage 2: Verify credentials → Login doctor  
+        - **Logout**
+        - End session  
+
+        ---
+
+        2. Change Password
+        - Stage 1: Input email → Send OTP  
+        - Stage 2: Input new password after OTP confirmation → Reset old password  
+
+        ---
+
+        3. Edit Profile
+        - Stage 1: Update optional details (email, street, state)  
+        - Stage 2: Save details  
+
+        ---
+
+        4. Payment Method
+        - Stage 1: Input card details (type, holder name, number, expiry, CVV)  
+        - Stage 2: Verify card details  
+        - Stage 3: Check if card already exists  
+        - Stage 4: Save card details  
+
+        ---
+
+        5. Appointment Management
+        - Stage 1: Doctor receives appointment request  
+        - Stage 2: Doctor sets schedule (home or office)  
+        - Stage 3: User confirms appointment  
+        - If user cancels → Provide reason → Doctor reschedules  
+        - Stage 4: Appointment price deducted from user’s payment method  
+
+        - **Follow-up (Home appointments)**  
+        - Notifications sent as appointment time approaches  
+        - Doctor scans QR code to start appointment  
+        - Late arrival penalties applied  
+
+        - **Settlement Stage (New)**  
+        - If appointment completed → Platform transfers payment to doctor’s account  
+        - Doctor notified of payout details  
+
+        ---
+
+        6. Add to Cart
+        - If item already in cart → Notify doctor  
+        - Else → Add item with quantity  
+
+        ---
+
+        7. Place Order
+        - Stage 1: Get doctor’s address (if missing → prompt doctor)  
+        - Stage 2: Process delivery details  
+        - Stage 3: Doctor makes payment → Places order  
+        - Stage 4: Pharmacy notified  
+        - Stage 5: Doctor receives order details & status  
+
+        - **After Placing Order**  
+        - Notifications sent as delivery time approaches  
+        - Delivery person generates timed QR code → Doctor scans to confirm delivery  
+
+        ---
+
+        8. Delete Account
+        - Stage 1: Check for open appointments/orders  
+        - If yes → Notify doctor, halt deletion  
+        - Stage 2: Delete account  
+
+        ---
+
+# 💊 Pharmacy Flow 
+
+    1. Authentication
+    - **Registration**
+    - Stage 1: Input pharmacy name, email, password  
+    - Stage 2: Verify email → Register pharmacy if successful  
+    - **Login**
+    - Stage 1: Input email, password  
+    - Stage 2: Verify credentials → Login pharmacy  
+    - **Logout**
+    - End session  
+
+    ---
+
+    2. Add Drug
+    - Stage 1: Input drug name, description, price, category  
+    - Stage 2: Save drug details  
+
+    ---
+
+    3. Edit Profile
+    - Stage 1: Update optional details (email, street, state, image)  
+    - Stage 2: Save profile  
+
+    ---
+
+    4. Order Management
+    - Stage 1: Pharmacy receives notification for each drug ordered from them  
+    - Stage 2: Pharmacy prepares order for delivery  
+    - Stage 3: If unable to fulfill order → Cancel order  
+    - **Refund Triggered:** Platform refunds user’s payment  
+    - User receives refund notification  
+
+    ---
+
+    5. Delete Account
+    - Stage 1: Check if pharmacy has open orders  
+    - If yes → Notify pharmacy, halt deletion  
+    - Stage 2: Delete account  
+
+    ---
+
+# 🚚 Delivery Flow 
+
+    1. Authentication Flow
+    - **Registration**
+    - Stage 1: Input firstname, lastname, email, password, phone number, vehicle type (optional), ID verification document (optional)  
+    - Stage 2: Verify email → Verify ID (if required) → Register delivery person if successful  
+    - **Login**
+    - Stage 1: Input email, password  
+    - Stage 2: Verify credentials → Login delivery person  
+    - **Logout**
+    - End session  
+
+    ---
+
+    2. Get Order Items Details Flow
+    - Stage 1: Input order ID  
+    - Stage 2: Verify order ID  
+    - Stage 3: Confirm order assignment  
+    - Stage 4: Add order items and details to delivery list  
+
+    ---
+
+    3. Deliver Order Flow
+    - Stage 1: Generate QR code for the order  
+    - User/doctor scans QR code to validate  
+    - If mismatch → Notify both user/doctor and delivery person  
+    - Stage 2: Confirm delivery status  
+    - Mark order as “Delivered” in system  
+    - Trigger settlement flow:  
+        - If successful delivery → Payment transferred to pharmacy’s account  
+        - If failed/mismatched → Refund triggered to user  
+
+
+    ---
+
+    4. Delete Account Flow
+    - Stage 1: Check if delivery person has open deliveries  
+    - If yes → Notify, halt deletion  
+    - Stage 2: Delete account  
+
+    ---
+
+
