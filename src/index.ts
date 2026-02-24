@@ -1,9 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-import conn from './config/db_config.js';
+// Models
+import mainModels from './models/main_model.js';
 
+// Dotenv config
 dotenv.config();
+
+// Initialize models
+mainModels();
 
 const app = express();
 
