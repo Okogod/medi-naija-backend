@@ -1,4 +1,4 @@
-import mysql2, { type Connection } from 'mysql2';
+import  { type Connection, createConnection } from 'mysql2';
 
 import dotenv from 'dotenv';
 
@@ -11,7 +11,7 @@ let query;
 
 
 // Connecting To Database
-const conn: Connection = mysql2.createConnection({
+const conn: Connection = createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD

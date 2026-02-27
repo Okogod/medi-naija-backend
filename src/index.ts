@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
+import redisClient from './config/redis_config.js';
+
 // Models
 import mainModels from './models/main_model.js';
 

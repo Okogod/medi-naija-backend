@@ -17,9 +17,7 @@ const userTableSchema = () => {
     conn.query(query, (err, result) => {
         if (err) {
             console.log(`Error creating ${DB_CONST.user_table} table:`, err);
-        } else {
-            console.log(`${DB_CONST.user_table} table created or already exists.`);
-        }
+        } 
     });
 
 
