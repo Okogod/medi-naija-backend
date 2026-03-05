@@ -2,17 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 
 
-// Models
-import mainModels from './models/main_model.js';
 
 // Dotenv config
 dotenv.config();
-
-
-// Initialize models
-mainModels();
-
-
 
 
 
