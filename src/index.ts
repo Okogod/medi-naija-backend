@@ -1,10 +1,15 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-
+// Models
+import ModelInit from './models/model.init.js';
 
 // Dotenv config
 dotenv.config();
+
+
+// Execute Models
+ModelInit();
 
 
 
