@@ -13,8 +13,6 @@ dotenv.config();
 mainModels();
 
 
-//  ===== User Routes =====
-import user_auth_router from './routes/user_routes/user_authentication_routes/register_route.js';
 
 
 
@@ -25,7 +23,6 @@ app.use(express.json());
 const PORT = process.env.SERVER_PORT ?? 3000;
 
 
-app.use( user_auth_router );
 
 
 
