@@ -4,6 +4,10 @@ import dotenv from 'dotenv';
 // Models
 import ModelInit from './models/model.init.js';
 
+
+// Routes
+import PatientRouter from './patient/patient.routes.js';
+
 // Dotenv config
 dotenv.config();
 
@@ -12,10 +16,11 @@ dotenv.config();
 ModelInit();
 
 
-
 const app = express();
 
 app.use(express.json());
+
+app.use(PatientRouter);
 
 const PORT = process.env.SERVER_PORT ?? 3000;
 
