@@ -7,13 +7,14 @@ import {
     checkIfPatientExistMiddleware,
     verifyRegistrationCodeMiddleware,
     SendVerificationCodeRateLimiterMiddlewre,
-    ResendVerificationCodeRateLimiterMiddlewre
+    ResendVerificationCodeRateLimiterMiddlewre,
+    LoginRateLimitMiddleware
 } from "./patient.middlewares.js";
 import { ValidateRequestBody } from "../middlewares/global.middleware.js";
 
 
 // Controllers
-import { SendRegistrationCodeController, RegisterPatientController, ResendRegistrationCodeController } from "./patient.controllers.js";
+import { SendRegistrationCodeController, RegisterPatientController, ResendRegistrationCodeController, LoginPatientController } from "./patient.controllers.js";
 
 const PatientRouter = Router();
 
@@ -21,6 +22,8 @@ PatientRouter.post('/patient/send-registration-code', SendVerificationCodeRateLi
 
 PatientRouter.post('/patient/verify-registration-code', ValidateRequestBody, verifyRegistrationCodeMiddleware(), RegisterPatientController);
 
-PatientRouter.post('/patient/resend-registration-code', ResendVerificationCodeRateLimiterMiddlewre, ValidateRequestBody, ResendRegistrationCodeController )
+PatientRouter.post('/patient/resend-registration-code', ResendVerificationCodeRateLimiterMiddlewre, ValidateRequestBody, ResendRegistrationCodeController );
+
+PatientRouter.post( '/patient/login-patient', LoginRateLimitMiddleware, ValidateRequestBody, LoginPatientController )
 
 export default PatientRouter;

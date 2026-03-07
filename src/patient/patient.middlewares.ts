@@ -9,7 +9,7 @@ import type { verifyRegistrationCodeRequestType } from "../types/global.type.js"
 import { VerifyRegistrationCodeService } from './patient.services.js';
 
 // Respositories
-import { CheckIfUSerExists } from "./patient.repositories.js";
+import { CheckIfPatientExists } from "./patient.repositories.js";
 
 
 // ===== Rate Limit Middlewares =====
@@ -30,6 +30,14 @@ export const SendVerificationCodeRateLimiterMiddlewre = rateLimit({
     }
 });
 
+export const LoginRateLimitMiddleware = rateLimit({
+    windowMs: 60 * 15 * 1000,
+    max: 5,
+    handler: (req: Request, res: Response) => {
+        res.status(429).json({ error: `Too many requests, please try again after 15 minutes` });
+    }
+})
+
 
 // Check If User Exists
 export const checkIfPatientExistMiddleware = (table: string) => {
@@ -41,7 +49,7 @@ export const checkIfPatientExistMiddleware = (table: string) => {
 
             const { email } = req.body;
 
-            const userExists = await CheckIfUSerExists(table, email);
+            const userExists = await CheckIfPatientExists(table, email);
 
             if (userExists) {
 

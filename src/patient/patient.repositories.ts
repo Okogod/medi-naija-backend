@@ -10,9 +10,10 @@ import DB_CONST from "../db_const/db_const.js";
 // Types
 import type { userRegistrationType } from "../types/global.type.js";
 import type { ResultType } from "../types/global.type.js";
+import type { QueryResult } from 'mysql2';
 
-// Check if user exists
-export const CheckIfUSerExists = (table: string, email: string) => {
+// Check If Patient Exists
+export const CheckIfPatientExists = (table: string, email: string) => {
 
     return new Promise((resolve, reject) => {
 
@@ -44,7 +45,7 @@ export const CheckIfUSerExists = (table: string, email: string) => {
 
 }
 
-// Register User
+// Register Patient
 export const RegisterPatient = async ({ firstname, lastname, email, password }: userRegistrationType) => {
 
     try {
@@ -67,5 +68,38 @@ export const RegisterPatient = async ({ firstname, lastname, email, password }: 
         return error.message;
 
     }
+
+}
+
+// Login Patient
+export const LoginPatient = async (email: string, password: string) => {
+
+
+    try {
+
+        let query;
+
+        query = `SELECT * FROM ${DB_CONST.patients_table} WHERE email = ? LIMIT 1`;
+
+        const [ row, field]: any = await conn.promise().query(query, [email]);
+
+        if (row.length === 0) {
+            return [];
+        }
+
+        const comparedPassword = await bcrypt.compare(password, row[0].password);
+
+        if (!comparedPassword) {
+            return [];
+        }
+
+        return (row);
+
+    } catch (error: any) {
+
+        return error;
+
+    }
+
 
 }
