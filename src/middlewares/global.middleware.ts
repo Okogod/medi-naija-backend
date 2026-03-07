@@ -12,7 +12,7 @@ export const ValidateRequestBody = (req: Request<{}, {}, {}>, res: Response, nex
 
         if (vals == "" || vals == null || vals == undefined) {
 
-            return res.status(400).json({ error: `${Keys[Values.indexOf(vals)]} input was empty` });
+            return res.status(400).json({ error: `"${Keys[Values.indexOf(vals)]}" input was empty` });
 
         }
 

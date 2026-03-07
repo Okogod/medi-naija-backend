@@ -88,10 +88,6 @@ export const SendRegistrationCodeService = ({ firstname, lastname, email, passwo
 
     redisClient
         .hSet(`Verify:${email}`, { firstname, lastname, email, password, code })
-        .then(() => {
-            console.log(`Verification code stored in Redis for ${email}`);
-            redisClient.expire(`Verify:${email}`, 60 * 10); // Set expiration time to 10 minutes (600 seconds)
-        })
         .catch((err) => {
             return err;
         });

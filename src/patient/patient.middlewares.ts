@@ -1,51 +1,88 @@
 // Types
-import type { RowDataPacket } from "mysql2";
-
 import type { Request, Response, NextFunction } from "express";
+import type { verifyRegistrationCodeRequestType } from "../types/global.type.js";
 
-type ResultType = RowDataPacket & {
-    patientid: string,
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string
-}
 
 // Mysql config
 import conn from "../config/db_config.js";
 
+// Redis config
+import redisClient from "../config/redis_config.js";
+
+// Respositories
+import { CheckIfUSerExists } from "./patient.repositories.js";
+
 
 // Check If User Exists
-export const checkIfPatientExistMiddleware = ( table: string ) => {
-
-    
-    return ( req:Request, res: Response, next: NextFunction ) => {
+export const checkIfPatientExistMiddleware =  (table: string) => {
 
 
-        const { email } = req.body;
+    return async (req: Request<{}, {}, {email: string}>, res: Response, next: NextFunction) => {
 
-        let query;
+        try{
 
-        query = `SELECT * FROM ${table} WHERE email = ? LIMIT 1`;
+            const { email } = req.body;
 
-        conn.query<ResultType[]>(query, [ email ], (error, result) => {
+            const userExists = await CheckIfUSerExists( table, email );
 
-            if (error) {
+            if( userExists ){
 
-                return res.status(500).json({ error: error.message })
-
-            }
-
-            if (result.length > 0) {
-
-                return res.status(409).json({ error: `User with email ${email} already exists` })
-
-            }
-
+                return res.status(400).json({ error: `User already exists` });  
             
-            next();
+            }
 
-        })
+            next();
+        }
+        catch( error: any ){
+            return res.status(500).json({ error: error.message})
+        }
+
+
+
+
+
+
+
     }
 
+}
+
+
+// Verify Registration Code
+export const verifyRegistrationCodeMiddleware = () => {
+
+    return (req: Request<{}, {}, verifyRegistrationCodeRequestType>, res: Response, next: NextFunction) => {
+
+        const { email, code } = req.body;
+
+        redisClient.hGetAll(`Verify:${email}`)
+            .then((result) => {
+
+                if (!result) {
+
+                    return res.status(400).json({ error: `Invalid Registration Code` });
+
+                }
+
+                if (result.code !== code) {
+
+                    return res.status(400).json({ error: `Invalid Registration Code` });
+
+                }
+
+                req.body = { firstname: result.firstname, lastname: result.lastname, email: result.email, password: result.password };
+
+                redisClient.del(`Verify:${email}`)
+                    .catch((error) => {
+                        return res.status(500).json({ error: `INTERNAL SERVER ERROR: ${error.message}` });
+                    })
+
+                next();
+
+            })
+            .catch((error) => {
+                res.status(500).json({ error: `INTERNAL SERVER ERROR: ${error.message}` })
+            })
+
+    }
 }

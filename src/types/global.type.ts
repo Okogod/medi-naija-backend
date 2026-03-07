@@ -1,3 +1,16 @@
+// Types
+import type { RowDataPacket } from "mysql2";
+
+
+
+export type ResultType = RowDataPacket & {
+    patientid: string,
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string
+}
+
 // Send Registration Code Type
 export type SendRegistrationCodeType = {
     firstname: string,
@@ -21,4 +34,13 @@ export type userRegistrationType = {
     lastname: string,
     email: string, 
     password: string
+}
+
+// Verify Registration Code Request Type
+export type verifyRegistrationCodeRequestType = {
+    firstname: string,
+    lastname: string,
+    password: string,
+    email: string,
+    code?: string
 }
