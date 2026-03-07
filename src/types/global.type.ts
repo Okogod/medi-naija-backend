@@ -42,5 +42,5 @@ export type verifyRegistrationCodeRequestType = {
     lastname: string,
     password: string,
     email: string,
-    code?: string
+    code: string
 }

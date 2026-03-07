@@ -3,7 +3,7 @@ import type { Response, Request } from "express";
 import type { userRegistrationType } from "../types/global.type.js";
 
 // Services
-import { SendRegistrationCodeService } from "./patient.services.js";
+import { SendRegistrationCodeService, ResendRegistrationCodeService } from "./patient.services.js";
 
 // Repositories
 import { RegisterPatient } from "./patient.repositories.js";
@@ -29,8 +29,6 @@ export const RegisterPatientController = async (req: Request<{}, {}, userRegistr
 
     try{
 
-        const { firstname, lastname, email, password } = req.body;
-
         RegisterPatient(req.body);
 
         res.status(201).json({ message: `Account created successfully` })
@@ -41,4 +39,21 @@ export const RegisterPatientController = async (req: Request<{}, {}, userRegistr
     }
     
 
+}
+
+
+export const ResendRegistrationCodeController = async ( req: Request<{}, {}, { email: string}>, res: Response ) => {
+
+    try{
+        const { email } = req.body;
+
+        const data = await ResendRegistrationCodeService( email );
+
+        res.status(200).json({ message: data });
+
+    }catch( error ){
+
+        res.status(500).json({ error })
+
+    }
 }

@@ -93,3 +93,68 @@ export const SendRegistrationCodeService = ({ firstname, lastname, email, passwo
         });
 
 }
+
+export const VerifyRegistrationCodeService = (email: string, code: string) => {
+
+    return new Promise((resolve, reject) => {
+
+        redisClient.hGetAll(`Verify:${email}`)
+            .then((result) => {
+
+                if (!result) {
+
+                    reject('Invalid Registration Code');
+
+                }
+
+                if (result.code !== code) {
+
+                    reject('Invalid Registration Code');
+
+                }
+
+                resolve(result);
+
+
+            })
+            .catch((error) => {
+
+                reject(error);
+  
+            })
+
+    })
+
+
+
+}
+
+export const ResendRegistrationCodeService = ( email: string ) => { 
+
+    return new Promise(( resolve, reject ) => {
+
+        redisClient.hGetAll(`Verify:${email}`)
+        .then( ( data) => {
+
+            if( !data ){
+
+                reject( 'No registration code found for this email' );
+                
+            }
+
+            SendRegistrationCodeService({
+                firstname: data.firstname,
+                lastname: data.lastname,
+                email: data.email,
+                password: data.password
+            });
+
+            resolve( 'Registration code resent successfully' );
+        })
+        .catch( ( error ) => {
+            reject( error );
+        } )
+
+    })
+
+ }
