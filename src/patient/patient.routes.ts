@@ -5,16 +5,28 @@ import DB_CONST from "../db_const/db_const.js";
 // Middlewares
 import {
     checkIfPatientExistMiddleware,
+    checkIfPatientExistToSendForgotPasswordCodeMiddleware,
     verifyRegistrationCodeMiddleware,
+    verifyForgotPasswordCodeMiddleware,
     SendVerificationCodeRateLimiterMiddlewre,
     ResendVerificationCodeRateLimiterMiddlewre,
-    LoginRateLimitMiddleware
+    LoginRateLimitMiddleware,
+    SendForgotPasswordCodeRateLimitMiddleware,
+    CheckIfEmailHaveBeenVerifiedForForgotPassword
 } from "./patient.middlewares.js";
 import { ValidateRequestBody } from "../middlewares/global.middleware.js";
 
 
 // Controllers
-import { SendRegistrationCodeController, RegisterPatientController, ResendRegistrationCodeController, LoginPatientController } from "./patient.controllers.js";
+import { 
+    SendRegistrationCodeController, 
+    RegisterPatientController, 
+    ResendRegistrationCodeController, 
+    LoginPatientController, 
+    SendForgotPasswordCodeController,
+    ResestPasswordController 
+} from "./patient.controllers.js";
+import { ResetPassword } from "./patient.repositories.js";
 
 const PatientRouter = Router();
 
@@ -24,6 +36,14 @@ PatientRouter.post('/patient/verify-registration-code', ValidateRequestBody, ver
 
 PatientRouter.post('/patient/resend-registration-code', ResendVerificationCodeRateLimiterMiddlewre, ValidateRequestBody, ResendRegistrationCodeController );
 
-PatientRouter.post( '/patient/login-patient', LoginRateLimitMiddleware, ValidateRequestBody, LoginPatientController )
+PatientRouter.post( '/patient/login-patient', LoginRateLimitMiddleware, ValidateRequestBody, LoginPatientController );
+
+PatientRouter.post( '/patient/send-forgot-password-code', SendForgotPasswordCodeRateLimitMiddleware, ValidateRequestBody, checkIfPatientExistToSendForgotPasswordCodeMiddleware(DB_CONST.patients_table), SendForgotPasswordCodeController );
+
+PatientRouter.post( '/patient/verify-forgot-password-code',  ValidateRequestBody, verifyForgotPasswordCodeMiddleware(),  );
+
+PatientRouter.post( '/patient/reset-password',  ValidateRequestBody, CheckIfEmailHaveBeenVerifiedForForgotPassword(), ResestPasswordController );
+
+
 
 export default PatientRouter;

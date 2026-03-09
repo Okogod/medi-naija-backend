@@ -103,3 +103,25 @@ export const LoginPatient = async (email: string, password: string) => {
 
 
 }
+
+// Reset Password
+export const ResetPassword = async ( email: string, newPassword: string ) => {
+
+    try{
+
+        let query;
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        query = `UPDATE ${DB_CONST.patients_table} SET password = ? WHERE email = ?`;
+
+        const [ row ] = await conn.promise().query(query, [hashedNewPassword, email]);
+
+        return row;
+
+    }catch( error: any ){
+
+        throw new Error( error );
+    }
+
+}

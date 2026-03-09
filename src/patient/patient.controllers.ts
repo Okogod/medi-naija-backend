@@ -3,10 +3,15 @@ import type { Response, Request } from "express";
 import type { userRegistrationType } from "../types/global.type.js";
 
 // Services
-import { SendRegistrationCodeService, ResendRegistrationCodeService } from "./patient.services.js";
+import { 
+    SendRegistrationCodeService, 
+    ResendRegistrationCodeService, 
+    SendForgotPasswordCodeService,
+} from "./patient.services.js";
 
 // Repositories
-import { RegisterPatient, LoginPatient } from "./patient.repositories.js";
+import { RegisterPatient, LoginPatient, ResetPassword } from "./patient.repositories.js";
+import redisClient from "../config/redis_config.js";
 
 export const SendRegistrationCodeController = async (req: Request<{}, {}, userRegistrationType>, res: Response) => {
 
@@ -58,7 +63,6 @@ export const ResendRegistrationCodeController = async ( req: Request<{}, {}, { e
     }
 }
 
-
 export const LoginPatientController = async ( req: Request<{}, {}, {email:string, password: string}>, res: Response ) => {
 
     try{
@@ -78,6 +82,47 @@ export const LoginPatientController = async ( req: Request<{}, {}, {email:string
     }catch( error ){
 
         res.status(500).json({ error })
+
+    }
+
+}
+
+export const SendForgotPasswordCodeController = async (req: Request<{}, {}, { email: string }>, res: Response) => {
+
+    try {
+
+        await SendForgotPasswordCodeService(req.body.email);
+
+        res.status(200).json({ message: `Forgot Password Code Sent` });
+
+    }
+    catch (error: any) {
+
+        res.status(500).json({ error: `INTERNAL SERVER ERROR: ${error.message}` });
+
+    }
+
+}
+
+export const ResestPasswordController = async ( req: Request<{}, {}, { email: string, newPassword: string }>, res: Response ) => {
+
+    try{
+
+        const { email, newPassword } = req.body;
+
+        await ResetPassword( email, newPassword );
+
+        await redisClient.DEL(`isVerified:${email}`)
+        .catch( ( error ) => {
+
+            return res.status(500).json({ error })
+        })
+
+        res.status(200).json({ message: `Password Reset Successful` });
+
+    }catch( error: any ){
+
+        return res.status(500).json({ error: error.message });
 
     }
 

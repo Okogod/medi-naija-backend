@@ -2,7 +2,6 @@
 import type { RowDataPacket } from "mysql2";
 
 
-
 export type ResultType = RowDataPacket & {
     patientid: string,
     firstname: string,
