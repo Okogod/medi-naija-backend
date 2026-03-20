@@ -5,7 +5,7 @@ import express from 'express';
 import { Server as socketServer } from 'socket.io';
 
 
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.SOCKET_PORT || 3000;
 
 
 const app = express();
@@ -20,6 +20,7 @@ io.on( "connection", ( socket ) => {
 
 
 })
+
 
 
 http.listen( port, () => 
