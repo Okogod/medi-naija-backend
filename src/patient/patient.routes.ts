@@ -9,7 +9,7 @@ import {
     verifyRegistrationCodeMiddleware,
     verifyForgotPasswordCodeMiddleware,
     SendVerificationCodeRateLimiterMiddlewre,
-    ResendVerificationCodeRateLimiterMiddlewre,
+    ResendCodeRateLimiterMiddlewre,
     LoginRateLimitMiddleware,
     SendForgotPasswordCodeRateLimitMiddleware,
     CheckIfEmailHaveBeenVerifiedForForgotPassword
@@ -24,9 +24,9 @@ import {
     ResendRegistrationCodeController, 
     LoginPatientController, 
     SendForgotPasswordCodeController,
+    ResendForgotPasswordCodeController,
     ResestPasswordController 
 } from "./patient.controllers.js";
-import { ResetPassword } from "./patient.repositories.js";
 
 const PatientRouter = Router();
 
@@ -34,13 +34,15 @@ PatientRouter.post('/patient/send-registration-code', SendVerificationCodeRateLi
 
 PatientRouter.post('/patient/verify-registration-code', ValidateRequestBody, verifyRegistrationCodeMiddleware(), RegisterPatientController);
 
-PatientRouter.post('/patient/resend-registration-code', ResendVerificationCodeRateLimiterMiddlewre, ValidateRequestBody, ResendRegistrationCodeController );
+PatientRouter.post('/patient/resend-registration-code', ResendCodeRateLimiterMiddlewre, ValidateRequestBody, ResendRegistrationCodeController );
 
 PatientRouter.post( '/patient/login-patient', LoginRateLimitMiddleware, ValidateRequestBody, LoginPatientController );
 
 PatientRouter.post( '/patient/send-forgot-password-code', SendForgotPasswordCodeRateLimitMiddleware, ValidateRequestBody, checkIfPatientExistToSendForgotPasswordCodeMiddleware(DB_CONST.patients_table), SendForgotPasswordCodeController );
 
 PatientRouter.post( '/patient/verify-forgot-password-code',  ValidateRequestBody, verifyForgotPasswordCodeMiddleware(),  );
+
+PatientRouter.post( '/pateinet/resend-forgot-password-code', ResendCodeRateLimiterMiddlewre, ValidateRequestBody, ResendForgotPasswordCodeController )
 
 PatientRouter.post( '/patient/reset-password',  ValidateRequestBody, CheckIfEmailHaveBeenVerifiedForForgotPassword(), ResestPasswordController );
 

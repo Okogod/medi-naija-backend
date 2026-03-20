@@ -6,11 +6,18 @@ import type { userRegistrationType } from "../types/global.type.js";
 import { 
     SendRegistrationCodeService, 
     ResendRegistrationCodeService, 
+    ResendForgotPasswordCodeService,
     SendForgotPasswordCodeService,
 } from "./patient.services.js";
 
 // Repositories
-import { RegisterPatient, LoginPatient, ResetPassword } from "./patient.repositories.js";
+import { 
+    RegisterPatient, 
+    LoginPatient, 
+    ResetPassword 
+} from "./patient.repositories.js";
+
+// Redis
 import redisClient from "../config/redis_config.js";
 
 export const SendRegistrationCodeController = async (req: Request<{}, {}, userRegistrationType>, res: Response) => {
@@ -46,13 +53,28 @@ export const RegisterPatientController = async (req: Request<{}, {}, userRegistr
 
 }
 
-
 export const ResendRegistrationCodeController = async ( req: Request<{}, {}, { email: string}>, res: Response ) => {
 
     try{
         const { email } = req.body;
 
         const data = await ResendRegistrationCodeService( email );
+
+        res.status(200).json({ message: data });
+
+    }catch( error ){
+
+        res.status(500).json({ error })
+
+    }
+}
+
+export const ResendForgotPasswordCodeController = async ( req: Request<{}, {}, { email: string}>, res: Response ) => {
+
+    try{
+        const { email } = req.body;
+
+        const data = await ResendForgotPasswordCodeService( email );
 
         res.status(200).json({ message: data });
 

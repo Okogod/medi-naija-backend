@@ -7,11 +7,9 @@ import generateFourDigitCode from "../utils/generate_four_digit_code.js";
 // Redis
 import redisClient from "../config/redis_config.js";
 
-
+// Types
 import type { SendRegistrationCodeType } from "../types/global.type.js";
 
-
-import { ResetPassword } from "./patient.repositories.js";
 
 export const SendRegistrationCodeService = ({ firstname, lastname, email, password }: SendRegistrationCodeType) => {
 
@@ -104,6 +102,7 @@ export const VerifyRegistrationCodeService = (email: string, code: string) => {
         redisClient.hGetAll(`Verify:${email}`)
             .then((result) => {
 
+
                 if (!result) {
 
                     reject('Invalid Registration Code');
@@ -123,7 +122,7 @@ export const VerifyRegistrationCodeService = (email: string, code: string) => {
             .catch((error) => {
 
                 reject(error);
-  
+
             })
 
     })
@@ -132,37 +131,62 @@ export const VerifyRegistrationCodeService = (email: string, code: string) => {
 
 }
 
-export const ResendRegistrationCodeService = ( email: string ) => { 
+export const ResendRegistrationCodeService = (email: string) => {
 
-    return new Promise(( resolve, reject ) => {
+    return new Promise((resolve, reject) => {
 
         redisClient.hGetAll(`Verify:${email}`)
-        .then( ( data) => {
+            .then((data) => {
 
-            if( !data ){
+                if (!data) {
 
-                reject( 'No registration code found for this email' );
-                
-            }
+                    reject('No registration code found for this email');
 
-            SendRegistrationCodeService({
-                firstname: data.firstname,
-                lastname: data.lastname,
-                email: data.email,
-                password: data.password
-            });
+                }
 
-            resolve( 'Registration code resent successfully' );
-        })
-        .catch( ( error ) => {
-            reject( error );
-        } )
+                SendRegistrationCodeService({
+                    firstname: data.firstname,
+                    lastname: data.lastname,
+                    email: data.email,
+                    password: data.password
+                });
+
+                resolve('Registration code resent successfully');
+            })
+            .catch((error) => {
+                reject(error);
+            })
 
     })
 
- }
+}
 
- export const SendForgotPasswordCodeService = (email: string) => {
+export const ResendForgotPasswordCodeService = (email: string) => {
+
+    return new Promise((resolve, reject) => {
+
+        redisClient.hGetAll(`Verify:${email}`)
+            .then((data) => {
+
+                if (!data) {
+
+                    reject('No registration code found for this email');
+
+                }
+
+                SendForgotPasswordCodeService( email );
+
+                resolve('Registration code resent successfully');
+            })
+            .catch((error) => {
+                reject(error);
+            })
+
+    })
+
+}
+
+export const SendForgotPasswordCodeService = (email: string) => {
 
     const code = generateFourDigitCode();
 
@@ -239,7 +263,7 @@ export const ResendRegistrationCodeService = ( email: string ) => {
     })
 
     redisClient
-        .hSet(`ForgotPassword:${email}`, {  code })
+        .hSet(`ForgotPassword:${email}`, { code })
         .catch((err) => {
             return err;
         });
@@ -273,7 +297,7 @@ export const VerifyForgotPasswordCodeService = (email: string, code: string) => 
             .catch((error) => {
 
                 reject(error);
-  
+
             })
 
     })

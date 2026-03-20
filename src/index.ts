@@ -16,18 +16,19 @@ dotenv.config();
 ModelInit();
 
 
+
+
 const app = express();
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the Patient Management API' });
+});
 
 app.use(express.json());
 
 app.use(PatientRouter);
 
 const PORT = process.env.SERVER_PORT ?? 3000;
-
-
-
-
-
 
 
 

@@ -61,7 +61,7 @@ export const RegisterPatient = async ({ firstname, lastname, email, password }: 
 
         query = `INSERT INTO ${DB_CONST.patients_table} VALUES (?, ?, ?, ?, ?)`;
 
-        conn.promise().query(query, [patientid, firstname, lastname, email, hashedPassword]);
+        conn.promise().query(query, [patientid, firstname.toLowerCase(), lastname.toLowerCase(), email.toLowerCase(), hashedPassword]);
 
     } catch (error: any) {
 

@@ -14,7 +14,7 @@ import { CheckIfPatientExists } from "./patient.repositories.js";
 
 // ===== Rate Limit Middlewares =====
 
-export const ResendVerificationCodeRateLimiterMiddlewre = rateLimit({
+export const ResendCodeRateLimiterMiddlewre = rateLimit({
     windowMs: 60 * 15 * 1000,
     max: 5,
     handler: (req: Request, res: Response) => {
